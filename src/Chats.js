@@ -8,25 +8,62 @@ import { collection,  onSnapshot, orderBy, query } from 'firebase/firestore';
 import { db } from './firebase';
 import Chat from "./Chat"
 function Chats() {
-    const [ourPosts, setPosts] = useState([])
+    const [ourPosts, setPosts] = useState([]);
+
     
-    useEffect(()=>{
-        const colRef = collection(db,"posts"); 
-        const q = query(colRef, orderBy("timestamp", "desc"));
+
+    window.addEventListener('load', async() => {
+        // setInterval(() => {
+
+      await  Fetchdata(); 
+    // }, 2000);
+      });
+    // Fetch the required data using the get() method
+   const Fetchdata = ()=>{ 
+        const q = query(collection(db, 'posts'))
+        onSnapshot(q, (querySnapshot) => {
         const posts = []
-        onSnapshot(q, (snapshot)=>{
-               
-               snapshot.docs.forEach((doc)=> {
-               posts.push({ ...doc.data(), id: doc.id});
-               
-            }) 
+        querySnapshot.forEach((doc) => {
+            posts.push({ id: doc.id, data: doc.data() })
         })
-       setPosts(posts);
+
+        setPosts(posts)
+        })
+        // const colRef = await collection(db,"posts"); 
+        // const q =await query(colRef, orderBy("timestamp", "desc"));
+
+        // onSnapshot(q, (snapshot)=>{
+               
+        //        snapshot.docs.forEach((doc)=> {
+        //        posts.push({ ...doc.data(), id: doc.id});
+               
+        //     }) 
+        // })
+    //    setPosts(posts);
+      
+    }
+    console.log(ourPosts)
+    
+    // console.log(ourPosts)
+    // var posts = []
+    // useEffect(()=>{
+    //     // setTimeout(() => {
+        
 
         
-        console.log(posts)
+    //     console.log(posts)
+        
+    // // }, 10000);
 
-    },[])
+    // },[])
+    // var postData = [];
+    // setTimeout(() => { 
+    //      postData = (posts.length !== 0 ? true : false);
+    //     console.log(postData)
+    // }, 2000);
+   
+    
+
   return (
     <div className="chats">
         <div className="chats__header">
@@ -39,18 +76,31 @@ function Chats() {
         </div>
 
         <div className="chats__posts">
-            
+       
+            {/* {ourPosts.map((data=>({data.username}))} */}
+  
+        
             { 
-                ourPosts?.map((post) => {
-                    <Chat
-                     key={post.id}
-                     ourPost={post}
-                
-                     
-                    />
-                
+            
 
-                    })
+           ourPosts.map((post) =>
+
+
+           
+
+                    
+             <>
+
+              <div className='chat'>
+              <Avatar className='chat__avatar' />
+              <div className="chat__info">
+              <h4>{post.data.username}</h4>
+              <p>Tap to view - {new Date(post.data.timestamp?.toDate()).toUTCString()}</p>
+              </div>
+              </div>
+              </>
+              )
+      
             }
         </div>
     </div>

@@ -3,6 +3,7 @@ import React from 'react'
 import { Avatar } from '@mui/material'
 import "./Chat.css"
 function Chat({ourPost}) {
+//   return(  alert("here"))
     console.log(ourPost)
     return (
         <div className='chat'>
